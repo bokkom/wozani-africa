@@ -1,0 +1,178 @@
+[
+  {
+    "brand": "Red Bull",
+    "slug": "red-bull",
+    "filenameWhite": "red-bull-white.png",
+    "filenameInk": "red-bull-ink.png",
+    "aspectRatio": 1.7321,
+    "source": "en.wikipedia.org (File:RedBullEnergyDrink.svg)"
+  },
+  {
+    "brand": "Coca-Cola",
+    "slug": "coca-cola",
+    "filenameWhite": "coca-cola-white.png",
+    "filenameInk": "coca-cola-ink.png",
+    "aspectRatio": 3.1964,
+    "source": "commons.wikimedia.org (File:Coca-Cola logo.svg)"
+  },
+  {
+    "brand": "Corona",
+    "slug": "corona",
+    "filenameWhite": "corona-white.png",
+    "filenameInk": "corona-ink.png",
+    "aspectRatio": 1.6429,
+    "source": "en.wikipedia.org (File:Corona Extra.svg)"
+  },
+  {
+    "brand": "Harley-Davidson",
+    "slug": "harley-davidson",
+    "filenameWhite": "harley-davidson-white.png",
+    "filenameInk": "harley-davidson-ink.png",
+    "aspectRatio": 1.2321,
+    "source": "commons.wikimedia.org (File:Harley-Davidson logo.svg)"
+  },
+  {
+    "brand": "Jack Daniel's",
+    "slug": "jack-daniels",
+    "filenameWhite": "jack-daniels-white.png",
+    "filenameInk": "jack-daniels-ink.png",
+    "aspectRatio": 1.5,
+    "source": "en.wikipedia.org (File:Jack Daniels Logo.svg)"
+  },
+  {
+    "brand": "Carling Black Label",
+    "slug": "black-label",
+    "filenameWhite": "black-label-white.png",
+    "filenameInk": "black-label-ink.png",
+    "aspectRatio": 2.375,
+    "source": "en.wikipedia.org (File:Carling Black Label logo.png)"
+  },
+  {
+    "brand": "Suzuki",
+    "slug": "suzuki",
+    "filenameWhite": "suzuki-white.png",
+    "filenameInk": "suzuki-ink.png",
+    "aspectRatio": 1.4821,
+    "source": "commons.wikimedia.org (File:Suzuki Motor Corporation logo.svg)"
+  },
+  {
+    "brand": "Vodacom",
+    "slug": "vodacom",
+    "filenameWhite": "vodacom-white.png",
+    "filenameInk": "vodacom-ink.png",
+    "aspectRatio": 4.0536,
+    "source": "en.wikipedia.org (File:Vodacom Logo 2017.svg)"
+  },
+  {
+    "brand": "MTN",
+    "slug": "mtn",
+    "filenameWhite": "mtn-white.png",
+    "filenameInk": "mtn-ink.png",
+    "aspectRatio": 2.0,
+    "source": "commons.wikimedia.org (File:MTN 2022 logo.svg)"
+  },
+  {
+    "brand": "Telkom",
+    "slug": "telkom",
+    "filenameWhite": "telkom-white.png",
+    "filenameInk": "telkom-ink.png",
+    "aspectRatio": 3.9821,
+    "source": "commons.wikimedia.org (File:TelkomSA.svg)"
+  },
+  {
+    "brand": "ABSA",
+    "slug": "absa",
+    "filenameWhite": "absa-white.png",
+    "filenameInk": "absa-ink.png",
+    "aspectRatio": 1.0,
+    "source": "commons.wikimedia.org (File:Absa Logo.svg)"
+  },
+  {
+    "brand": "Standard Bank",
+    "slug": "standard-bank",
+    "filenameWhite": "standard-bank-white.png",
+    "filenameInk": "standard-bank-ink.png",
+    "aspectRatio": 3.4464,
+    "source": "worldvectorlogo.com (standard-bank)"
+  },
+  {
+    "brand": "Discovery",
+    "slug": "discovery",
+    "filenameWhite": "discovery-white.png",
+    "filenameInk": "discovery-ink.png",
+    "aspectRatio": 4.875,
+    "source": "en.wikipedia.org (File:Discovery Limited logo.svg)"
+  },
+  {
+    "brand": "Santam",
+    "slug": "santam",
+    "filenameWhite": "santam-white.png",
+    "filenameInk": "santam-ink.png",
+    "aspectRatio": 2.6786,
+    "source": "en.wikipedia.org (File:Santam logo.svg)"
+  },
+  {
+    "brand": "SABC",
+    "slug": "sabc",
+    "filenameWhite": "sabc-white.png",
+    "filenameInk": "sabc-ink.png",
+    "aspectRatio": 2.4286,
+    "source": "commons.wikimedia.org (File:South African Broadcasting Corporation logo.svg)"
+  },
+  {
+    "brand": "Sprite",
+    "slug": "sprite",
+    "filenameWhite": "sprite-white.png",
+    "filenameInk": "sprite-ink.png",
+    "aspectRatio": 2.6429,
+    "source": "commons.wikimedia.org (File:Sprite 2022.svg)"
+  },
+  {
+    "brand": "Fanta",
+    "slug": "fanta",
+    "filenameWhite": "fanta-white.png",
+    "filenameInk": "fanta-ink.png",
+    "aspectRatio": 1.3929,
+    "source": "commons.wikimedia.org (File:Fanta 2023.svg)"
+  },
+  {
+    "brand": "Schweppes",
+    "slug": "schweppes",
+    "filenameWhite": "schweppes-white.png",
+    "filenameInk": "schweppes-ink.png",
+    "aspectRatio": 1.5179,
+    "source": "commons.wikimedia.org (File:Schweppes wordmark.svg)"
+  },
+  {
+    "brand": "Nivea",
+    "slug": "nivea",
+    "filenameWhite": "nivea-white.png",
+    "filenameInk": "nivea-ink.png",
+    "aspectRatio": 1.0,
+    "source": "commons.wikimedia.org (File:NIVEA logo 2021.svg)"
+  },
+  {
+    "brand": "M-Net",
+    "slug": "m-net",
+    "filenameWhite": "m-net-white.png",
+    "filenameInk": "m-net-ink.png",
+    "aspectRatio": 2.6071,
+    "source": "commons.wikimedia.org (File:M-Net.svg)"
+  },
+  {
+    "brand": "Cartoon Network",
+    "slug": "cartoon-network",
+    "filenameWhite": "cartoon-network-white.png",
+    "filenameInk": "cartoon-network-ink.png",
+    "aspectRatio": 1.6429,
+    "source": "commons.wikimedia.org (File:Cartoon Network 2010 logo.svg)"
+  },
+  {
+    "brand": "DStv",
+    "slug": "dstv",
+    "filenameWhite": "dstv-white.png",
+    "filenameInk": "dstv-ink.png",
+    "aspectRatio": 1.625,
+    "source": "commons.wikimedia.org (File:DStv Logo (2023).svg)"
+  }
+]
