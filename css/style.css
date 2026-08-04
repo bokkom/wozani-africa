@@ -222,6 +222,9 @@ em{font-style:normal}
 .ticker__track{display:inline-flex;align-items:center;gap:28px;white-space:nowrap;will-change:transform}
 .ticker__track span{font:600 .85rem/1 var(--display);letter-spacing:.18em;text-transform:uppercase}
 .ticker__track i{font-style:normal;color:var(--orange);font-size:.6rem}
+@keyframes marquee{to{transform:translateX(calc(-1 * var(--marquee-dist)))}}
+.ticker--run{animation:marquee linear infinite}
+.ticker--reverse{animation-direction:reverse}
 
 /* ============ section head ============ */
 .section-head{

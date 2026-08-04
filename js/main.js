@@ -273,13 +273,15 @@
 
   /* ---------- marquees ---------- */
   function loopTicker(track, speed, reverse) {
-    var period = track.scrollWidth; // width of one content set
+    /* one full cycle = one content set + the flex gap before the next copy */
+    var period = track.scrollWidth + (parseFloat(getComputedStyle(track).columnGap) || 0);
     var copy = track.innerHTML;
     while (track.scrollWidth < period + window.innerWidth * 1.5) track.innerHTML += copy;
-    var dur = period / speed;
-    gsap.fromTo(track,
-      { x: reverse ? -period : 0 },
-      { x: reverse ? 0 : -period, duration: dur, ease: 'none', repeat: -1 });
+    /* ponytail: CSS animation instead of GSAP — compositor-driven, immune to rAF throttling */
+    track.style.setProperty('--marquee-dist', period + 'px');
+    track.style.animationDuration = (period / speed) + 's';
+    track.classList.add('ticker--run');
+    if (reverse) track.classList.add('ticker--reverse');
   }
   if (!reduceMotion) {
     var heroTicker = document.querySelector('[data-ticker]');
@@ -306,19 +308,65 @@
     var px = gsap.quickTo(preview, 'x', { duration: 0.5, ease: 'power3' });
     var py = gsap.quickTo(preview, 'y', { duration: 0.5, ease: 'power3' });
     var list = document.getElementById('legacyList');
+    var previewOn = false;
+    var lastX = -1, lastY = -1, verifyTimer = 0, checkOnMove = false;
+    function hidePreview() {
+      if (!previewOn) return;
+      previewOn = false;
+      // overwrite:'auto' kills any still-running show tween — without it a 0.4s
+      // show outlives the 0.3s hide and drags opacity back to 1 (the stick bug)
+      gsap.to(preview, { opacity: 0, scale: 0.9, duration: 0.3, ease: 'power3.in', overwrite: 'auto' });
+    }
+    // single source of truth: preview may be visible only while a live hit-test
+    // puts the pointer on a row, no overlay is open, and the tab is visible.
+    // Lenis slides rows under a stationary pointer and Chromium re-dispatches
+    // boundary events in an order that races the hide, so events are treated as
+    // hints and elementFromPoint as the authority.
+    function overlayOpen() {
+      return !!document.querySelector('.lightbox.is-open, .menu.is-open');
+    }
+    function rowAtPointer() {
+      var el = document.elementFromPoint(lastX, lastY);
+      return el ? el.closest('.legacy__row') : null;
+    }
+    function verify() {
+      if (previewOn && (document.hidden || overlayOpen() || !rowAtPointer())) hidePreview();
+    }
+    function trackPointer(e) { lastX = e.clientX; lastY = e.clientY; }
+    // mouseover fires before mouseenter, so coords are fresh when the show-gate runs
+    window.addEventListener('mouseover', trackPointer, { passive: true });
+    window.addEventListener('mousemove', function (e) {
+      trackPointer(e);
+      if (checkOnMove) { checkOnMove = false; verify(); }
+    }, { passive: true });
     list.addEventListener('mousemove', function (e) {
       px(e.clientX + 28);
       py(e.clientY - 120);
     });
     list.querySelectorAll('.legacy__row').forEach(function (row) {
       row.addEventListener('mouseenter', function () {
+        // gate the show on a live hit-test: a synthetic enter for a row that has
+        // already scrolled away (or under an open overlay) must not re-show
+        if (rowAtPointer() !== row || overlayOpen()) return;
         pimg.src = row.dataset.img;
-        gsap.to(preview, { opacity: 1, scale: 1, duration: 0.4, ease: 'power3.out' });
+        previewOn = true;
+        gsap.to(preview, { opacity: 1, scale: 1, duration: 0.4, ease: 'power3.out', overwrite: 'auto' });
       });
     });
-    list.addEventListener('mouseleave', function () {
-      gsap.to(preview, { opacity: 0, scale: 0.9, duration: 0.3, ease: 'power3.in' });
-    });
+    list.addEventListener('mouseleave', hidePreview);
+    window.addEventListener('scroll', function () {
+      verify();
+      // trailing checks: a synthetic enter can land after the last scroll event,
+      // so re-verify once the scroll settles and once on the next real mousemove
+      checkOnMove = true;
+      clearTimeout(verifyTimer);
+      verifyTimer = setTimeout(verify, 150);
+    }, { passive: true });
+    document.addEventListener('mouseleave', hidePreview);        // pointer left the window
+    document.addEventListener('visibilitychange', hidePreview);  // tab hidden
+    window.addEventListener('resize', hidePreview);
+    // lightbox/menu toggle via click (mouse or keyboard); verify after their handlers ran
+    document.addEventListener('click', function () { requestAnimationFrame(verify); });
     // preload previews on first approach, not at page load
     list.addEventListener('mouseenter', function () {
       list.querySelectorAll('.legacy__row').forEach(function (row) {
