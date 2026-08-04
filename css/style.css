@@ -523,13 +523,39 @@ em{font-style:normal}
   .header__nav{display:none}
   .header__right .btn--pill{display:none}
   .burger{display:block}
-  .services__track{flex-direction:column}
-  .panel{flex-basis:auto;padding-bottom:64px}
+  /* services: native swipe carousel with snap — mobile's answer to the desktop pin */
+  .services__track:not(.is-static){
+    flex-direction:row;gap:5vw;
+    overflow-x:auto;scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:0 7vw 8px;
+  }
+  .services__track:not(.is-static)::-webkit-scrollbar{display:none}
+  .services__track:not(.is-static) .panel{
+    flex:0 0 86vw;scroll-snap-align:center;
+    padding:0 0 40px;min-height:0;
+  }
+  .services__track.is-static{flex-direction:column}
+  .services__track.is-static .panel{flex-basis:auto;padding-bottom:64px}
   /* simplified stacked collage — absolute layout gets messy at narrow widths */
   .panel__media{height:auto}
   .panel__img{position:static}
   .panel__img--main,.panel__img--tall{width:100%;height:auto}
   .panel__img--small{width:58%;height:auto;margin:-18% 0 0 auto;position:relative;z-index:2}
+  .panel__text{max-width:none}
+  /* cinematic slow zoom on the hero photo (compositor-driven) */
+  .hero__media img{animation:kenburns 16s ease-in-out infinite alternate}
+  /* legacy spotlight: the row nearest mid-screen lights up + shows its photo */
+  .legacy__row{transition:background-color .4s}
+  .legacy__row .legacy__thumb{
+    width:56px;height:42px;object-fit:cover;border-radius:3px;flex-shrink:0;
+    align-self:center;opacity:0;transform:translateX(10px) scale(.9);
+    transition:opacity .35s,transform .35s;
+  }
+  .legacy__row.is-hot{background:rgba(240,112,48,.08)}
+  .legacy__row.is-hot .legacy__name{color:var(--orange)}
+  .legacy__row.is-hot .legacy__thumb{opacity:1;transform:none}
   .about__stats{grid-template-columns:repeat(2,1fr);gap:32px 20px}
   .gallery__grid{grid-template-columns:repeat(2,1fr)}
   .gallery__col:nth-child(3){display:none}
@@ -553,8 +579,8 @@ em{font-style:normal}
   .chip{min-height:44px;display:inline-flex;align-items:center}
   .footer__nav a{padding:16px 0}
   .panel__link{padding:14px 0;margin:-14px 0}
-  /* desktop-only progress bar never updates on stacked mobile layout */
-  .services__progress{display:none}
+  /* progress bar is driven by carousel swipe position on mobile */
+  .services__progress{max-width:none;margin:0 var(--pad) 18px;padding:0}
   /* label is ink-on-ink here; keep it readable on the dark gallery section */
   #gallery .section-head__label{color:var(--muted)}
   /* fixed header must not cover headings on native anchor jumps */
@@ -574,6 +600,18 @@ em{font-style:normal}
   .legacy__row{flex-wrap:wrap;row-gap:8px}
   .legacy__tag{flex-basis:100%;padding-left:60px}
   .form__actions .btn--big{width:100%}
+}
+
+/* mobile hero slow zoom */
+@keyframes kenburns{from{transform:scale(1)}to{transform:scale(1.09)}}
+
+/* touch press feedback */
+@media (hover:none){
+  .btn{transition:background-color .3s,color .3s,border-color .3s,transform .15s}
+  .btn:active{transform:scale(.95)}
+  .chip:active{transform:scale(.93)}
+  .gallery__col figure:active img{transform:scale(1.04)}
+  .legacy__row:active{background:rgba(240,112,48,.14)}
 }
 
 /* ============ reduced motion ============ */

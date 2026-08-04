@@ -140,10 +140,13 @@
 
   /* ---------- hero scroll parallax ---------- */
   if (!reduceMotion) {
-    gsap.to('.hero__media img', {
-      yPercent: 12, scale: 1.06, ease: 'none',
-      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
-    });
+    // desktop only: mobile hero runs the CSS ken-burns zoom instead (same property)
+    if (isDesktop) {
+      gsap.to('.hero__media img', {
+        yPercent: 12, scale: 1.06, ease: 'none',
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+      });
+    }
     gsap.to('.hero__content', {
       yPercent: -18, opacity: 0.25, ease: 'none',
       scrollTrigger: { trigger: '.hero', start: 'top top', end: '75% top', scrub: true }
@@ -263,12 +266,23 @@
   // mobile: simple reveals for panels
   mm.add('(max-width: 899px)', function () {
     if (reduceMotion) return;
-    gsap.utils.toArray('.panel').forEach(function (panel) {
-      gsap.from(panel, {
-        opacity: 0, y: 60, duration: 0.9, ease: 'power3.out',
-        scrollTrigger: { trigger: panel, start: 'top 85%' }
-      });
+    // swipe carousel: wire progress bar + number to horizontal scroll position
+    var track = document.getElementById('servicesTrack');
+    var num = document.getElementById('servicesProgressNum');
+    var fill = document.getElementById('servicesProgressFill');
+    function onSwipe() {
+      var max = track.scrollWidth - track.clientWidth;
+      var pr = max > 0 ? track.scrollLeft / max : 0;
+      fill.style.transform = 'scaleX(' + pr + ')';
+      num.textContent = '0' + (Math.min(3, Math.round(pr * 3)) + 1);
+    }
+    track.addEventListener('scroll', onSwipe, { passive: true });
+    onSwipe();
+    gsap.from('.services__track .panel', {
+      opacity: 0, x: 70, duration: 0.9, ease: 'power3.out', stagger: 0.12,
+      scrollTrigger: { trigger: '.services', start: 'top 75%' }
     });
+    return function () { track.removeEventListener('scroll', onSwipe); };
   });
 
   /* ---------- marquees ---------- */
@@ -376,8 +390,8 @@
   }
 
   /* ---------- gallery column parallax ---------- */
-  if (isDesktop && !reduceMotion) {
-    var speeds = [0, -60, -140];
+  if (!reduceMotion) {
+    var speeds = isDesktop ? [0, -60, -140] : [0, -70, 0];
     document.querySelectorAll('.gallery__col').forEach(function (col) {
       var s = speeds[parseInt(col.dataset.speed, 10)] || 0;
       if (!s) return;
@@ -387,6 +401,23 @@
       });
     });
   }
+
+  /* ---------- legacy spotlight (touch devices — hover preview equivalent) ---------- */
+  if ((!isDesktop || !hasHover) && !reduceMotion) {
+    document.querySelectorAll('.legacy__row').forEach(function (row) {
+      var thumb = document.createElement('img');
+      thumb.className = 'legacy__thumb';
+      thumb.src = row.dataset.img;
+      thumb.alt = '';
+      thumb.loading = 'lazy';
+      row.insertBefore(thumb, row.querySelector('.legacy__tag'));
+      ScrollTrigger.create({
+        trigger: row, start: 'top 56%', end: 'bottom 44%',
+        toggleClass: { targets: row, className: 'is-hot' }
+      });
+    });
+  }
+
 
   /* ---------- lightbox ---------- */
   var lightbox = document.getElementById('lightbox');
@@ -429,6 +460,18 @@
     if (e.key === 'ArrowLeft') openLightbox(lbIndex - 1);
     if (e.key === 'ArrowRight') openLightbox(lbIndex + 1);
   });
+  // touch swipe navigation
+  var lbSx = 0, lbSy = 0;
+  lightbox.addEventListener('touchstart', function (e) {
+    lbSx = e.touches[0].clientX; lbSy = e.touches[0].clientY;
+  }, { passive: true });
+  lightbox.addEventListener('touchend', function (e) {
+    var dx = e.changedTouches[0].clientX - lbSx;
+    var dy = e.changedTouches[0].clientY - lbSy;
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      openLightbox(dx < 0 ? lbIndex + 1 : lbIndex - 1);
+    }
+  }, { passive: true });
 
   /* ---------- custom cursor ---------- */
   if (hasHover && !reduceMotion) {
