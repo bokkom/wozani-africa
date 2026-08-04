@@ -228,6 +228,34 @@
     });
   }
 
+  /* ---------- breather slideshows ---------- */
+  if (!reduceMotion) {
+    document.querySelectorAll('[data-rotate]').forEach(function (slides) {
+      var imgs = Array.prototype.slice.call(slides.querySelectorAll('img'));
+      if (imgs.length < 2) return;
+      var caption = slides.parentElement.querySelector('.breather__caption');
+      var idx = 0, timer = null;
+      function advance() {
+        imgs[idx].classList.remove('is-on');
+        idx = (idx + 1) % imgs.length;
+        imgs[idx].classList.add('is-on');
+        caption.classList.add('is-swapping');
+        setTimeout(function () {
+          caption.textContent = imgs[idx].dataset.caption;
+          caption.classList.remove('is-swapping');
+        }, 450);
+      }
+      // run only while on screen
+      new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          if (!timer) timer = setInterval(advance, 4500);
+        } else if (timer) {
+          clearInterval(timer); timer = null;
+        }
+      }, { threshold: 0.15 }).observe(slides.parentElement);
+    });
+  }
+
   /* ---------- services horizontal scroll (desktop) ---------- */
   var mm = gsap.matchMedia();
   mm.add('(min-width: 900px)', function () {
@@ -266,23 +294,55 @@
   // mobile: simple reveals for panels
   mm.add('(max-width: 899px)', function () {
     if (reduceMotion) return;
-    // swipe carousel: wire progress bar + number to horizontal scroll position
     var track = document.getElementById('servicesTrack');
     var num = document.getElementById('servicesProgressNum');
     var fill = document.getElementById('servicesProgressFill');
+    var panels = gsap.utils.toArray('.services__track .panel');
+
+    // story-card layout: number + title live on the photo (moved back on cleanup)
+    var moved = [];
+    panels.forEach(function (panel) {
+      var media = panel.querySelector('.panel__media');
+      var text = panel.querySelector('.panel__text');
+      var pnum = panel.querySelector('.panel__num');
+      var title = panel.querySelector('.panel__title');
+      moved.push({ text: text, pnum: pnum, title: title, anchor: panel.querySelector('.panel__copy') });
+      media.appendChild(pnum);
+      media.appendChild(title);
+      panel.classList.add('panel--card');
+    });
+
+    // progress + center-card focus (side cards dim and shrink)
     function onSwipe() {
       var max = track.scrollWidth - track.clientWidth;
       var pr = max > 0 ? track.scrollLeft / max : 0;
       fill.style.transform = 'scaleX(' + pr + ')';
       num.textContent = '0' + (Math.min(3, Math.round(pr * 3)) + 1);
+      var mid = window.innerWidth / 2;
+      panels.forEach(function (p) {
+        var r = p.getBoundingClientRect();
+        var d = Math.min(1, Math.abs(r.left + r.width / 2 - mid) / mid);
+        p.style.transform = 'scale(' + (1 - d * 0.06) + ')';
+        p.style.opacity = 1 - d * 0.4;
+      });
     }
     track.addEventListener('scroll', onSwipe, { passive: true });
     onSwipe();
-    gsap.from('.services__track .panel', {
-      opacity: 0, x: 70, duration: 0.9, ease: 'power3.out', stagger: 0.12,
+    gsap.from('.services__viewport', {
+      opacity: 0, y: 50, duration: 0.9, ease: 'power3.out',
       scrollTrigger: { trigger: '.services', start: 'top 75%' }
     });
-    return function () { track.removeEventListener('scroll', onSwipe); };
+    return function () {
+      track.removeEventListener('scroll', onSwipe);
+      moved.forEach(function (m) {
+        m.text.insertBefore(m.pnum, m.anchor);
+        m.text.insertBefore(m.title, m.anchor);
+      });
+      panels.forEach(function (p) {
+        p.classList.remove('panel--card');
+        p.style.transform = ''; p.style.opacity = '';
+      });
+    };
   });
 
   /* ---------- marquees ---------- */
